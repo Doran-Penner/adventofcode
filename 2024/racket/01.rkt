@@ -36,15 +36,38 @@
 ; now it's easy: go through the sorted lists together and calculate our result
 (define (diffsum x y acc)
   (+ acc (abs (- x y))))
-(define answer (foldl diffsum 0 sorted-l1 sorted-l2))
+(define answer1 (foldl diffsum 0 sorted-l1 sorted-l2))
 
-; and now auto-submit!
+; and now auto-submit! to avoid submitting every entry,
+; this is commented out — copy it into the repl instead
+#|
 (define result
-  (aoc-submit sesh 2024 01 1 answer))
+  (aoc-submit sesh 2024 01 1 answer1))
 (printf result)  ; response from server
+|#
 
 
 ; woohoo! now we do part 2
 ; we can keep the lists sorted, but may not use that fact;
 ; I know it'd be way faster to do that, but I'm lazy
 ; and learning this language
+; (also hard to use sorted-ness when we have Theta(k) access time
+; for the kth element of the list; the best we could do is stop
+; once we no longer see the element, but asymptotically that
+; changes nothing (🤓) so I say it's whateverrrr)
+
+; fun currying stuff
+(define (equalsn? n) (lambda (x) (equal? x n)))
+(define (occurence-maker lst)
+  (lambda (x acc)
+    (+ acc (* x
+              (count (equalsn? x) lst)))))
+
+(define answer2 (foldl (occurence-maker sorted-l2) 0 sorted-l1))
+
+#|
+(define result
+  (aoc-submit sesh 2024 01 2 answer2))
+(printf result)
+|#
+; WAHOO
