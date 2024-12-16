@@ -69,3 +69,39 @@
 (printf result)
 |#
 ; WAHOO
+
+
+; strategy:
+; - find all As; for each, add to the count if...
+; - check that the forward and backward diagonals are M,S or S,M
+
+; this has all A positions in string
+(define As/str (map car (regexp-match-positions* #rx"A" str)))
+
+(define (forward-slash? idx/pair)
+  (define upper-right/pair
+    ((gen-dir-stepper '(1 . -1)) idx/pair))
+  (define lower-left/pair
+    ((gen-dir-stepper '(-1 . 1)) idx/pair))
+  ; lazy; get both values, put in set, assert equal to {M, S}
+  (set=? (set #\M #\S) (set (get-at upper-right/pair) (get-at lower-left/pair))))
+
+; repeated code, whatever
+(define (backward-slash? idx/pair)
+  (define lower-right/pair
+    ((gen-dir-stepper '(-1 . -1)) idx/pair))
+  (define upper-left/pair
+    ((gen-dir-stepper '(1 . 1)) idx/pair))
+  (set=? (set #\M #\S) (set (get-at lower-right/pair) (get-at upper-left/pair))))
+
+(define (makes-x-mas? idx/pair)
+  (and (backward-slash? idx/pair) (forward-slash? idx/pair)))
+
+(define answer2
+  (count identity (map makes-x-mas? (map pair-idx/from-str As/str))))
+
+#|
+(define result
+  (aoc-submit sesh 2024 04 2 answer2))
+(printf result)
+|#
