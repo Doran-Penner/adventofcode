@@ -14,7 +14,13 @@
 			packages = with pkgs; [
 				# remember to `raco pkg install racket-langserver`!
 				racket
+				# rust time
+				cargo
+				rustc
 			];
+			buildInputs = [ pkgs.openssl ];
+			nativeBuildInputs = [ pkgs.pkg-config ];
+			LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [ pkgs.openssl ];
 		};
 	};
 }
