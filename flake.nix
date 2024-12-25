@@ -17,7 +17,7 @@
 		devShells.${system}.default = pkgs.mkShell {
 			packages = let
 				rust-packages = fenix.packages.${system}.stable.defaultToolchain;
-        # nice link to offline docs
+				# nice link to offline docs
 				rust-docs = pkgs.writeShellScriptBin "rust-docs" ''
 					xdg-open "${rust-packages}/share/doc/rust/html/index.html"
 				'';
